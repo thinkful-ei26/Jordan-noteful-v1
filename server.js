@@ -4,9 +4,9 @@
 // Load array of notes
 const data = require('./db/notes');
 
-const { PORT } = require('./config');
+const logger = require('./middleware/logger')
 
-const morgan = require('morgan');
+const { PORT } = require('./config');
 
 const express = require('express');
 
@@ -14,8 +14,7 @@ const app = express();
 
 // ADD STATIC SERVER HERE
 app.use(express.static('public'));
-
-app.use(morgan(':date[iso] :method :url :response-time'))
+app.use(logger);
 
 app.get('/api/notes/:id', (req, res) => {
     //let's us use numbers 
@@ -42,10 +41,6 @@ app.get('/api/notes', (req, res) => {
         res.json(data);
     }
 });
-
-app.get('/boom', (req, res, next) => {
-    throw new Error('Boom!!');
-  });
 
 app.use(function (req, res, next) {
     var err = new Error('Not Found');
