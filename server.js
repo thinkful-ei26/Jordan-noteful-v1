@@ -17,8 +17,9 @@ const express = require('express');
 const app = express();
 
 // ADD STATIC SERVER HERE
-app.use(express.static('public'));
 app.use(logger);
+app.use(express.static('public'));
+app.use(express.json());
 
 app.get('/api/notes/:id', (req, res) => {
     const id  = Number(req.params.id)
@@ -41,6 +42,32 @@ app.get('/api/notes/:id', (req, res) => {
         return next(err); // goes to error handler
       }
       res.json(list); // responds with filtered array
+    });
+  });
+
+  app.put('/api/notes/:id', (req, res, next) => {
+    const id = req.params.id;
+    console.log(req.body)
+    /***** Never trust users - validate input *****/
+    const updateObj = {};
+    const updateFields = ['title', 'content'];
+  
+    updateFields.forEach(field => {
+      if (field in req.body) {
+        updateObj[field] = req.body[field];
+      }
+    });
+  
+    notes.update(id, updateObj, (err, item) => {
+        console.log(updateObj)
+        if (err) {
+        return next(err);
+      }
+      if (item) {
+        res.json(item);
+      } else {
+        next();
+      }
     });
   });
 
