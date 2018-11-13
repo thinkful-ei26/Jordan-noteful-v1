@@ -20,8 +20,9 @@ const app = express();
 app.use(express.static('public'));
 app.use(logger);
 
-app.get('/api/notes/:id', (req, res, next) => {
-    const { id } = Number(req.params)
+app.get('/api/notes/:id', (req, res) => {
+    const id  = Number(req.params.id)
+    console.log(id);
     notes.find(id, (err, list) => {
         if (err) {
             return next(err); // goes to error handler
@@ -35,7 +36,6 @@ app.get('/api/notes/:id', (req, res, next) => {
 
   app.get('/api/notes', (req, res, next) => {
     const { searchTerm } = req.query;
-  
     notes.filter(searchTerm, (err, list) => {
       if (err) {
         return next(err); // goes to error handler
