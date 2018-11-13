@@ -2,11 +2,11 @@
 'use strict';
 
 // Load array of notes
-const express = require('express');
-
 const data = require('./db/notes');
 
 const { PORT } = require('./config');
+
+const express = require('express');
 
 const app = express();
 
