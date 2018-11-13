@@ -20,15 +20,15 @@ const app = express();
 app.use(express.static('public'));
 app.use(logger);
 
-app.get('/api/notes/:id', (req, res) => {
-    //let's us use numbers 
-    const id = Number(req.params.id);
-    //finds item by ID
-    const bookmark = data.find(item => item.id === id);
-
-    res.json(bookmark);
+app.get('/api/notes/:id', (req, res, next) => {
+    const { id } = Number(req.params)
+    notes.find(id, (err, list) => {
+        if (err) {
+            return next(err); // goes to error handler
+          }
+          res.json(list); // responds with filtered array
+    })
 });
-
 
  // http://localhost:8080/api/notes?searchTerm=cats
   //http://localhost:8080/api/notes/:searchTerm
