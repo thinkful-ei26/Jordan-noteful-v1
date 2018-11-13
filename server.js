@@ -6,6 +6,8 @@ const data = require('./db/notes');
 
 const { PORT } = require('./config');
 
+const morgan = require('morgan');
+
 const express = require('express');
 
 const app = express();
@@ -13,6 +15,7 @@ const app = express();
 // ADD STATIC SERVER HERE
 app.use(express.static('public'));
 
+app.use(morgan(':date[iso] :method :url :response-time'))
 
 app.get('/api/notes/:id', (req, res) => {
     //let's us use numbers 
@@ -39,6 +42,12 @@ app.get('/api/notes', (req, res) => {
         res.json(data);
     }
 });
+
+app.use(function (req, res, next) {
+    var err = new Error('Not Found');
+    err.status = 404;
+    res.status(404).json({ message: 'Not Found' });
+  });
 
 app.listen(PORT, function () {
     console.info(`Server listening on ${this.address().port}`);
