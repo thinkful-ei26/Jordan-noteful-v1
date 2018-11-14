@@ -1,7 +1,6 @@
 
 'use strict';
 
-const logger = require('./middleware/logger')
 const { PORT } = require('./config');
 const morgan = require('morgan');
 const express = require('express');

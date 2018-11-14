@@ -67,17 +67,16 @@ router.post('/notes', (req, res, next) => {
 });
 
 router.delete('/notes/:id', (req, res) => {
-
     const id = req.params.id;
     notes.delete(id, (err, note) => {
         if (err) {
-            console.log(err.status || 500)
+            return next(err.status || 500)
         }
         else if (!note) {
-            console.log("No Content" + err.status || 204)
+            return next("No Content" + err.status || 204)
         }
+        res.status(204).end();
     })
-    res.json();
 })
 
 module.exports = router;
