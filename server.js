@@ -2,24 +2,17 @@
 'use strict';
 
 const logger = require('./middleware/logger')
-
 const { PORT } = require('./config');
-
+const morgan = require('morgan');
 const express = require('express');
-
 const notesRouter = require('./routes/notes.router')
-
 const app = express();
 
 // ADD STATIC SERVER HERE
-app.use(logger);
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms'))
 app.use(express.static('public'));
 app.use(express.json());
-app.use(notesRouter);
-
-// app.get('/boom', (req, res, next) => {
-//     throw new Error('Boom!!');
-//   });
+app.use('/api', notesRouter);
 
 app.use(function (req, res, next) {
     var err = new Error('Not Found');

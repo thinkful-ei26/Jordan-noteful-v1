@@ -1,17 +1,12 @@
 'use strict';
 
-// Load array of notes
 const data = require('../db/notes');
-
-const simDB = require('../db/simDB');  // <<== add this
-
-const notes = simDB.initialize(data); // <<== and this
-
+const simDB = require('../db/simDB'); 
+const notes = simDB.initialize(data);
 const express = require('express');
-
 const router = express.Router(); 
 
-router.get('/api/notes/:id', (req, res) => {
+router.get('/notes/:id', (req, res) => {
     const id  = Number(req.params.id)
     console.log(id);
     notes.find(id, (err, list) => {
@@ -25,7 +20,7 @@ router.get('/api/notes/:id', (req, res) => {
  // http://localhost:8080/api/notes?searchTerm=cats
   //http://localhost:8080/api/notes/:searchTerm
 
-  router.get('/api/notes', (req, res, next) => {
+  router.get('/notes', (req, res, next) => {
     const { searchTerm } = req.query;
     notes.filter(searchTerm, (err, list) => {
       if (err) {
@@ -35,7 +30,7 @@ router.get('/api/notes/:id', (req, res) => {
     });
   });
 
-  router.put('/api/notes/:id', (req, res, next) => {
+  router.put('/notes/:id', (req, res, next) => {
     const id = req.params.id;
     console.log(req.body)
     /***** Never trust users - validate input *****/
