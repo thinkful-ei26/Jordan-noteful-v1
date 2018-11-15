@@ -86,10 +86,9 @@ notes.delete(id)
     .then(item => {
       if (item) {
         console.log(`No Content: ${id}`);
-        res.status(204).next();
+        res.status(204).end()
       } else {
-        res.status(500)
-        next();
+        res.status(500).end()
       }
     })
     .catch(err => {
@@ -98,3 +97,5 @@ notes.delete(id)
 });  
 
 module.exports = router;
+
+//success next with error next with nothing
