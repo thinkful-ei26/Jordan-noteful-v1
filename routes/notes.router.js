@@ -10,23 +10,35 @@ const router = express.Router();
 router.get('/notes/:id', (req, res) => {
     const id  = Number(req.params.id)
     console.log(id);
-    notes.find(id, (err, list) => {
-        if (err) {
-            return next(err); // goes to error handler
-          }
-          res.json(list); // responds with filtered array
+    notes.find(id)
+    .then(item => {
+      if (item) {
+        res.json(item);
+      } else {
+        next();
+      }
     })
+    .catch(err => {
+      next(err)
+    });
 });
 
 router.get('/notes', (req, res, next) => {
 const { searchTerm } = req.query;
-notes.filter(searchTerm, (err, list) => {
-    if (err) {
-    return next(err); // goes to error handler
-    }
-    res.json(list); // responds with filtered array
+
+notes.find(searchTerm)
+    .then(item => {
+      if (item) {
+        res.json(item);
+      } else {
+        next();
+      }
+    })
+    .catch(err => {
+      next(err)
+    });
 });
-});
+
 
 router.put('/notes/:id', (req, res, next) => {
     const id = req.params.id;
@@ -53,16 +65,17 @@ router.post('/notes', (req, res, next) => {
       err.status = 400;
       return next(err);
     }
-  
-    notes.create(newItem, (err, item) => {
-      if (err) {
-        return next(err);
-      }
+
+    notes.create(newItem)
+    .then(item => {
       if (item) {
         res.location(`http://${req.headers.host}/notes/${item.id}`).status(201).json(item);
       } else {
         next();
       }
+    })
+    .catch(err => {
+      next(err)
     });
 });
 
