@@ -6,7 +6,7 @@ const notes = simDB.initialize(data);
 const express = require('express');
 const router = express.Router(); 
 
-
+ 
 router.get('/notes/:id', (req, res) => {
     const id  = Number(req.params.id)
     console.log(id);
