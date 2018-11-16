@@ -30,6 +30,7 @@ const simDB = {
   },
 
   filter: function (term, callback) {
+    console.log(term, callback)
     setTimeout(() => {
       try {
         let list = term ? this.data.filter(item => item.title.includes(term)) : this.data;
@@ -86,6 +87,8 @@ const simDB = {
   }
 
 };
+
+console.log(`it's working`)
 
 const simDB_Async = {
   initialize: simDB.initialize,

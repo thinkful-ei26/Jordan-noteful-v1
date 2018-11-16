@@ -34,5 +34,3 @@ app.listen(PORT, function () {
   });
 
 console.log('Hello Noteful!');
-
-// INSERT EXPRESS APP CODE HERE...

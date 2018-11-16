@@ -25,9 +25,11 @@ router.get('/notes/:id', (req, res) => {
 
 router.get('/notes', (req, res, next) => {
 const { searchTerm } = req.query;
-
+console.log(searchTerm)
+console.log(`it's running`)
 notes.find(searchTerm)
     .then(item => {
+      console.log(item)
       if (item) {
         res.json(item);
       } else {
@@ -36,8 +38,10 @@ notes.find(searchTerm)
     })
     .catch(err => {
       next(err)
+      console.log(err)
     });
 });
+
 
 
 router.put('/notes/:id', (req, res, next) => {
