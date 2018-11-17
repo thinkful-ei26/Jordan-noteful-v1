@@ -27,7 +27,7 @@ router.get('/notes', (req, res, next) => {
 const { searchTerm } = req.query;
 console.log(searchTerm)
 console.log(`it's running`)
-notes.find(searchTerm)
+notes.filter(searchTerm)
     .then(item => {
       console.log(item)
       if (item) {
