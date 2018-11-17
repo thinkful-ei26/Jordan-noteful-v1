@@ -115,32 +115,47 @@ describe('GET /api/notes/:id', function () {
     });
 });                         
 
-describe('New Note with Location Header', function () {
+describe('POST /api/notes', function () {
 
-    it('POST request on "api/notes" should create and return new item with location header')
-       const newItem = { id: 1011, title: "sharks", content: "lorem ipsum" }
+    it('should create and return new item with location header', function() {
+       const newItem = { 'title': "Sharks are very cool", 'content': "lorem ipsum" }
+       return chai.request(app)
+            .post('/api/notes')
+            .send(newItem)
+            .then (res => {
+                expect(res).to.have.status(201);
+                expect(res).to.be.json;
+                expect(res).to.have.header('location');
+                expect(res.body.id).to.equal(1010);
+                expect(res.body.title).to.equal(newItem.title);
+                expect(res.body.content).to.equal(newItem.content);
+            });   
+        });
+
+    it('should return error if title is missing', function() {      
+        const newItem = { 'fake': 'fake' };
         return chai.request(app)
             .post('/api/notes')
             .send(newItem)
-            .then (function (res) {
-                expect(res).to.have.header('x-api-key');
-                expect(res).to.have.status(201);
+            .then(res => {
+                expect(res).to.have.status(400);
                 expect(res).to.be.json;
-                expect(res.body.title).to.exist;
-            });   
+                expect(res.body.message).to.equal('Missing `title` in request body');
+            })
+    });
 });
 
-describe('New Note with Missing Title', function () {
-    
-    it('POST request on "api/notes" should return an object with message when no title')
-    const missingTitle = "";
-    return chai.request(app)
-            .post('/api/notes')
-            .send(missingTitle)
-            .then(function (res) {
-                expect(res).to.include(missingTitle);
-                expect(res.body.title).to.satisfy(function(obj) {
-                    return obj = { msg: "Missing title in request body"};
-                });
-            });
+describe('PUT /api/notes:id', function (){
+
+    it('should update and return a note when given valid data')
+
+    it('should respond with 404 for invalid id')
+
+    it('should return an object w msg when missing "title" field')
+});
+
+describe('DELETE /api/notes/:id', function () {
+
+    it('should delete an item by id')
+
 });
