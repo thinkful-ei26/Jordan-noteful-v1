@@ -45,9 +45,9 @@ describe('404 handler', function () {
   
 });
 
-describe('Notes Default', function () {
+describe('GET /api/notes', function () {
 
-    it('GET request "/api/notes" should return the default array', function () {
+    it('should return the default array', function () {
         return chai.request(app)
             .get('/api/notes')
             .then (res => {
@@ -91,35 +91,29 @@ describe('Notes Default', function () {
             
 });           
 
-describe('Notes by ID', function () {
+describe('GET /api/notes/:id', function () {
     
-    it ('GET request on "/api/notes/:id" should return given ID object')
-        const id = 1001
+    it('should return the right note by ID', function () {
         return chai.request(app)
-            .get('/api/notes:id')
-            .send(id)
-            .then (res => {
-                expect(Object.keys({id})).to.satisfy(function() {
-                    return id;
-                })
+            .get('/api/notes/1001')
+            .then(res => {
                 expect(res).to.have.status(200);
-                expect(res.body.id).to.exist;
-                expect(res).to.be.an('object').that.includes(res);
-            });
-});
+                expect(res).to.be.json;
+                expect(res.body).to.be.an('object');
+                expect(res.body).to.include.keys('id', 'title', 'content');
+                expect(res.body.id).to.equal(1001);
+            });  
+        });                  
 
-describe('Notes by ID 404 handler', function() {
-
-    it('GET request on "/api/notes/:id" should return 404 for invalid id')
-       const id = 3001
+    it('should return 404 if ID does not exist', function () {
         return chai.request(app)
             .get('/DOES/NOT/EXIST')
-            .send(id)
             .then(res => {
                 expect(res).to.have.status(404);
                 expect(res).to.not.be.NaN;
-            });    
-});
+            });  
+    });
+});                         
 
 describe('New Note with Location Header', function () {
 
