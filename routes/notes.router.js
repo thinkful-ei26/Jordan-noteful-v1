@@ -43,7 +43,6 @@ notes.filter(searchTerm)
 });
 
 
-
 router.put('/notes/:id', (req, res, next) => {
     const id = req.params.id;
     console.log(req.body)
@@ -56,6 +55,21 @@ router.put('/notes/:id', (req, res, next) => {
         updateObj[field] = req.body[field];
       }
     });
+    if (!updateObj.title) {
+      const err = new Error('Missing `title` in request body');
+      err.status = 400;
+      return next(err);
+    }
+  
+    notes.update(id, updateObj)
+      .then(item => {
+        if (item) {
+          res.json(item);
+        } else {
+          next();
+        }
+      })
+      .catch(err => next(err));
 });
 
 // Post (insert) an item

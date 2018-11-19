@@ -108,6 +108,7 @@ describe('GET /api/notes/:id', function () {
     it('should return 404 if ID does not exist', function () {
         return chai.request(app)
             .get('/DOES/NOT/EXIST')
+            .catch(err => err.response)
             .then(res => {
                 expect(res).to.have.status(404);
                 expect(res).to.not.be.NaN;
@@ -137,6 +138,7 @@ describe('POST /api/notes', function () {
         return chai.request(app)
             .post('/api/notes')
             .send(newItem)
+            .catch(err => err.response)
             .then(res => {
                 expect(res).to.have.status(400);
                 expect(res).to.be.json;
@@ -145,17 +147,66 @@ describe('POST /api/notes', function () {
     });
 });
 
-describe('PUT /api/notes:id', function (){
+describe('PUT /api/notes/:id', function (){
 
-    it('should update and return a note when given valid data')
+    it('should update and return a note when given valid data', function() {
+        const newItem = { "title": "Bluefin Tuna", "content": "I'm a fish" };
+        return chai.request(app)
+            .put('/api/notes/1001')
+            .send(newItem)
+            .then(res => {
+                expect(res).to.have.status(200);
+                expect(res).to.be.json;
+                expect(res.body).to.be.a('object');
+                expect(res.body).to.include.keys('id', 'title', 'content');
+                expect(res.body.id).to.equal(1001);
+                expect(res.body.title).to.equal(newItem.title);
+                expect(res.body.content).to.equal(newItem.content);
+        });
+    });    
 
-    it('should respond with 404 for invalid id')
 
-    it('should return an object w msg when missing "title" field')
-});
+    it('should respond with 404 for invalid id', function() {
+        const newItem = { "Title": "Bluefin Tuna", "Content": "I'm a fish" };
+        return chai.request(app)
+            .put('/api/notes/DOESNOTEXIST')
+            .send(newItem)
+            .catch(err => err.response)
+            .then(res => {
+                expect(res).to.have.status(404);
+            })
+            .catch(err => console.log('Hello!'))
+
+
+    });
+
+
+    it('should return an object w msg when missing "title" field', function() {
+        const updateItem = {
+            'missing': 'title'
+          };
+          return chai.request(app)
+            .put('/api/notes/1005')
+            .send(updateItem)
+            .catch(err => err.response)
+            .then(res => {
+              expect(res).to.have.status(400);
+              expect(res).to.be.json;
+              expect(res.body).to.be.a('object');
+              expect(res.body.message).to.equal('Missing `title` in request body');
+            });
+        });
+
+    });
 
 describe('DELETE /api/notes/:id', function () {
 
-    it('should delete an item by id')
+    it('should delete an item by id', function() {
+        return chai.request(app)
+            .delete('/api/notes/1001')
+            .then(res => {
+                expect(res).to.have.status(204);
+            })
+    });
 
 });
